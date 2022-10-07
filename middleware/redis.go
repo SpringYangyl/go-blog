@@ -1,0 +1,26 @@
+package middleware
+
+import (
+	"context"
+	"github.com/go-redis/redis/v8"
+)
+var Ctx = context.Background()
+
+var rdb *redis.Client
+
+func Init() {
+	rdb = redis.NewClient(&redis.Options{
+		Addr:     "127.0.0.1:6379",
+		Password: "",
+		DB:       0,
+	})
+
+}
+func SetToken(val string){
+	rdb.Set(Ctx,"token",val,0)
+
+}
+func GetToken()string{
+	token := rdb.Get(Ctx,"token")
+	return token.Val()
+}
