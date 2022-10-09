@@ -13,27 +13,39 @@ import (
 
 var OneDayOfHours = 60 * 60 * 24
 var Secret = "tiktok"
-func Register(user *dao.User){
+
+func Register(user *dao.User) bool {
 	username := user.Username
 	password := user.Password
 	role := user.Role
-	u,_:=dao.GetUserByName(username)
-	if username == u.Username{
+	u, _ := dao.GetUserByName(username)
+	if username == u.Username {
 		fmt.Println("用户已经存在")
-		return
+		return false
 	}
 	password = EnCoder(password)
 	newUser := dao.User{
 		Username: username,
 		Password: password,
-		Role: role,
+		Role:     role,
 	}
-	dao.Register(&newUser)
-	fmt.Println("注册成功")
-
-
-
+	return dao.Register(&newUser)
 }
+func Login(username, password string) bool {
+	user, err := dao.GetUserByName(username)
+	if err != nil {
+		println(err.Error())
+		return false
+	}
+	if user.Username == username {
+		pas := EnCoder(password)
+		if pas == user.Password {
+			return true
+		}
+	}
+	return false
+}
+
 func EnCoder(password string) string {
 	h := hmac.New(sha256.New, []byte(password))
 	sha := hex.EncodeToString(h.Sum(nil))
@@ -76,5 +88,3 @@ func ParseToken(token string) (*jwt.StandardClaims, error) {
 	}
 	return nil, err
 }
-
-

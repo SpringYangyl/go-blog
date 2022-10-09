@@ -26,44 +26,13 @@ func Auth() gin.HandlerFunc {
 		token := GetToken()
 		parseToken, err := service.ParseToken(token)
 		if err != nil {
-			context.JSON(400,http.Response{
-				Status:           "错误",
-				StatusCode:       0,
-				Proto:            "",
-				ProtoMajor:       0,
-				ProtoMinor:       0,
-				Header:           nil,
-				Body:             nil,
-				ContentLength:    0,
-				TransferEncoding: nil,
-				Close:            false,
-				Uncompressed:     false,
-				Trailer:          nil,
-				Request:          nil,
-				TLS:              nil,
-			})
+			context.JSON(400, "错误")
 		}
-		if parseToken.Issuer != "admin"{
-			context.JSON(401,http.Response{
-				Status:           "无权限",
-				StatusCode:       0,
-				Proto:            "",
-				ProtoMajor:       0,
-				ProtoMinor:       0,
-				Header:           nil,
-				Body:             nil,
-				ContentLength:    0,
-				TransferEncoding: nil,
-				Close:            false,
-				Uncompressed:     false,
-				Trailer:          nil,
-				Request:          nil,
-				TLS:              nil,
-			})
+		if parseToken.Issuer != "admin" {
+			context.JSON(401, "无权限")
 		}
-		context.JSON(http.StatusOK,http.Response{
-			Status: string("欢迎管理员"),
-		})
+		context.JSON(http.StatusOK, "欢迎管理员")
+
 	}
-	
+
 }
