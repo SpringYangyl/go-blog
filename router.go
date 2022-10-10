@@ -11,4 +11,7 @@ func initRouter(r *gin.Engine) {
 	v1.GET("/jwt/", middleware.Auth(), controller.Jwt)
 	v1.POST("/register/", controller.Register)
 	v1.POST("/login/", controller.Login)
+	v1.GET("/getArticleById/", controller.GetArticleContent)
+	v1.GET("/getArticleList", controller.GetAllArticle)
+	v1.POST("/createArticle/", controller.CreateArticle)
 }
