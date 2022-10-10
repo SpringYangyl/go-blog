@@ -3,8 +3,8 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"go-blog/dao"
+	"go-blog/response"
 	"go-blog/service"
-	"net/http"
 )
 
 func Register(c *gin.Context) {
@@ -19,14 +19,9 @@ func Register(c *gin.Context) {
 		Role:     "normal",
 	}
 	if service.Register(user) {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "注册成功",
-		})
+		response.ResponseSuccess(c, "注册成功", true)
 	} else {
-		c.JSON(400, gin.H{
-			"msg": "注册失败",
-		})
-
+		response.ResponseError(c, "注册失败")
 	}
 }
 func Login(c *gin.Context) {
@@ -37,13 +32,10 @@ func Login(c *gin.Context) {
 	password := json.Password
 	res := service.Login(username, password)
 	if res {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "登录成功",
-		})
+		response.ResponseSuccess(c, "登录成功", true)
+
 	} else {
-		c.JSON(400, gin.H{
-			"msg": "登录失败",
-		})
+		response.ResponseError(c, "登录失败")
 	}
 }
 

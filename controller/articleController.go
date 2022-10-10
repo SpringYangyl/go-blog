@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"go-blog/dao"
+	"go-blog/response"
 	"go-blog/service"
 	"strconv"
 )
@@ -24,27 +25,19 @@ func CreateArticle(c *gin.Context) {
 		LikeCount:   int64(0),
 	}
 	if service.CreateArticle(article) {
-		c.JSON(200, gin.H{
-			"msg": "创建成功",
-		})
-	} else {
-		c.JSON(400, gin.H{
-			"msg": "创建失败",
-		})
+		response.ResponseSuccess(c, "创建成功", true)
 
+	} else {
+		response.ResponseError(c, "创建失败")
 	}
 }
 
 func GetAllArticle(c *gin.Context) {
 	articles, err := service.GetAllArticle()
 	if err != nil {
-		c.JSON(400, gin.H{
-			"msg": "系统错误",
-		})
+		response.ResponseError(c, "系统错误")
 	} else {
-		c.JSON(200, gin.H{
-			"data": articles,
-		})
+		response.ResponseSuccess(c, "success", articles)
 	}
 }
 
@@ -52,13 +45,14 @@ func GetArticleContent(c *gin.Context) {
 	id := c.Query("id")
 	articleId, errs := strconv.ParseInt(id, 10, 64)
 	if errs != nil {
-		c.JSON(400, "系统错误")
+		response.ResponseError(c, "失败")
 	}
-	articlc, err := service.GetArticleContent(articleId)
+	article, err := service.GetArticleContent(articleId)
 	if err != nil {
-		c.JSON(400, "查询失败")
+		response.ResponseError(c, "系统错误")
+	} else {
+		response.ResponseSuccess(c, "成功", article)
 	}
-	c.JSON(200, articlc)
 }
 
 type ArticleRequest struct {
